@@ -47,7 +47,8 @@ public final class LecternButtons {
 
     private static void onScreenInit(ScreenEvent.Init.Post event) {
         Screen screen = event.getScreen();
-        AbstractWidget existing = findModsButton(event);
+        AbstractWidget existing = net.lectern.LecternConfig.takeOverModsButton
+                ? findModsButton(event) : null;
 
         if (existing != null) {
             // Same place, same size, so the menu keeps its layout and nothing shifts.
@@ -62,7 +63,9 @@ public final class LecternButtons {
         if (!isTitleScreen(screen)) {
             return;
         }
-        if (!warnedAboutMissingButton) {
+        // Warn only when the takeover was wanted and failed. With it switched off, a separate
+        // button is the whole point and saying "nothing to take over" would be nonsense.
+        if (net.lectern.LecternConfig.takeOverModsButton && !warnedAboutMissingButton) {
             warnedAboutMissingButton = true;
             Lectern.LOGGER.warn("No '{}' button on the title screen to take over -- adding one, so "
                     + "the mod list stays reachable. Another mod may have removed it.", FML_MODS_KEY);

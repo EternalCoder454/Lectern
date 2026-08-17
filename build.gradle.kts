@@ -21,6 +21,20 @@ java {
 repositories {
     mavenCentral()
     maven("https://maven.neoforged.net/releases/") { name = "NeoForged" }
+    // Scoped to the one group, so a personal maven can never shadow a Minecraft or NeoForge
+    // artifact by accident.
+    maven("https://maven.shedaniel.me/") {
+        name = "shedaniel"
+        content { includeGroup("me.shedaniel.cloth") }
+    }
+}
+
+dependencies {
+    // Optional at runtime, compile-only here. Nothing outside net.lectern.screen.cloth mentions
+    // it, and that package is only reached once the mod is confirmed loaded -- resolving a class
+    // whose signatures name an absent mod throws NoClassDefFoundError, so the guard has to keep
+    // every mention behind it rather than merely guard the call.
+    compileOnly("me.shedaniel.cloth:cloth-config-neoforge:${property("cloth_config_version")}")
 }
 
 // Every loader gets a source set beside src/main. src/main compiles against a loader that may not

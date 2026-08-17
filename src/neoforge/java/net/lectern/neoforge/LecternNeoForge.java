@@ -26,8 +26,12 @@ public final class LecternNeoForge {
         // Client setup rather than the constructor: the mod list is not complete until every mod
         // has been constructed, and indexing half of it would be worse than indexing none.
         modBus.addListener(FMLClientSetupEvent.class, event -> event.enqueueWork(() -> {
+            net.lectern.LecternConfig.load();
             Lectern.index(new NeoForgeModSource());
             adoptLoaderScreens();
+            // After adoptLoaderScreens, so Lectern's own explicit registration wins over anything
+            // the loader might have for it.
+            ClothIntegration.register();
             LecternButtons.register();
         }));
     }

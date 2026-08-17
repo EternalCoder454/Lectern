@@ -9,5 +9,14 @@
   "lectern.no_settings": "No settings",
   "lectern.homepage": "Website",
   "lectern.issues": "Report an issue",
-  "lectern.none": "Nothing matches that search."
+  "lectern.none": "Nothing matches that search.",
+  "lectern.config.list": "Mod list",
+  "lectern.config.show_libraries": "Show libraries",
+  "lectern.config.show_libraries.tip": "Include the loader and library mods in the list by default.",
+  "lectern.config.compact_rows": "Compact rows",
+  "lectern.config.compact_rows.tip": "Draw rows tighter, fitting more mods on screen.",
+  "lectern.config.remember_search": "Remember search",
+  "lectern.config.remember_search.tip": "Keep what you typed when the screen is reopened.",
+  "lectern.config.take_over": "Replace the Mods button",
+  "lectern.config.take_over.tip": "Take over the loader's Mods button. Turn off to leave it alone and get a separate Lectern button instead. Takes effect on restart."
 }

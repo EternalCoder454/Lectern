@@ -30,10 +30,17 @@ import java.util.List;
  */
 public final class LecternScreen extends Screen {
 
-    private static final int ROW_HEIGHT = 26;
+    /** Row height, tightened when the player asks for it. Read once per screen, not per row. */
+    private final int rowHeight = net.lectern.LecternConfig.compactRows ? 18 : 26;
     private static final int LIST_WIDTH = 168;
     private static final int PADDING = 8;
-    private static final int HEADER = 32;
+
+    private static final int SEARCH_Y = 8;
+    private static final int SEARCH_HEIGHT = 18;
+    /** Baseline of the "N of M mods" line, clear of the search box above it. */
+    private static final int COUNT_Y = SEARCH_Y + SEARCH_HEIGHT + 4;
+    /** Where the list starts. Derived, so moving the search box cannot leave it overlapping. */
+    private static final int HEADER = COUNT_Y + 12;
 
     private static final int COLOUR_TEXT = 0xFFFFFFFF;
     private static final int COLOUR_DIM = 0xFFA0A0A0;
@@ -46,11 +53,14 @@ public final class LecternScreen extends Screen {
     /** Owned by this screen and reused; see the class docs. */
     private final List<ModEntry> filtered = new ArrayList<>();
 
+    /** Survives the screen when remember_search is on. */
+    private static String lastQuery = "";
+
     private EditBox search;
     private Button settings;
     private ModEntry selected;
     private int scroll;
-    private boolean includeLibraries;
+    private boolean includeLibraries = net.lectern.LecternConfig.showLibraries;
 
     public LecternScreen(Screen parent) {
         super(Component.translatable("lectern.title"));
@@ -59,11 +69,17 @@ public final class LecternScreen extends Screen {
 
     @Override
     protected void init() {
-        search = new EditBox(this.font, PADDING, PADDING, LIST_WIDTH, 18,
+        search = new EditBox(this.font, PADDING, SEARCH_Y, LIST_WIDTH, SEARCH_HEIGHT,
                 Component.translatable("lectern.search"));
         search.setMaxLength(64);
         // Only refilter when the text actually changes, which is what the responder is for.
-        search.setResponder(query -> refilter());
+        search.setResponder(query -> {
+            lastQuery = query;
+            refilter();
+        });
+        if (net.lectern.LecternConfig.rememberSearch && !lastQuery.isEmpty()) {
+            search.setValue(lastQuery);
+        }
         addRenderableWidget(search);
 
         settings = Button.builder(Component.translatable("lectern.settings"), b -> openSettings())
@@ -124,7 +140,7 @@ public final class LecternScreen extends Screen {
 
     /** {@return how many rows fit} */
     private int visibleRows() {
-        return Math.max(1, (this.height - HEADER - 36) / ROW_HEIGHT);
+        return Math.max(1, (this.height - HEADER - 36) / rowHeight);
     }
 
     private int maxScroll() {
@@ -146,10 +162,10 @@ public final class LecternScreen extends Screen {
                 break;
             }
             ModEntry entry = filtered.get(index);
-            int y = listTop + i * ROW_HEIGHT;
+            int y = listTop + i * rowHeight;
             boolean isSelected = entry == selected;
 
-            graphics.fill(PADDING, y, PADDING + LIST_WIDTH, y + ROW_HEIGHT - 2,
+            graphics.fill(PADDING, y, PADDING + LIST_WIDTH, y + rowHeight - 2,
                     isSelected ? COLOUR_ROW_SELECTED : COLOUR_ROW);
             graphics.text(this.font, trim(entry.name(), LIST_WIDTH - 12),
                     PADDING + 5, y + 4, COLOUR_TEXT);
@@ -199,7 +215,7 @@ public final class LecternScreen extends Screen {
         Component label = filtered.size() == total
                 ? Component.translatable("lectern.count", total)
                 : Component.translatable("lectern.count.filtered", filtered.size(), total);
-        graphics.text(this.font, label, PADDING, HEADER - 12, COLOUR_DIM);
+        graphics.text(this.font, label, PADDING, COUNT_Y, COLOUR_DIM);
     }
 
     /** Cuts a string to fit, since the font cannot wrap a single-line row. */
@@ -215,7 +231,7 @@ public final class LecternScreen extends Screen {
         double mouseY = event.y();
         if (event.button() == 0 && mouseX >= PADDING && mouseX <= PADDING + LIST_WIDTH
                 && mouseY >= HEADER) {
-            int index = scroll + (int) ((mouseY - HEADER) / ROW_HEIGHT);
+            int index = scroll + (int) ((mouseY - HEADER) / rowHeight);
             if (index >= 0 && index < filtered.size()) {
                 selected = filtered.get(index);
                 updateSettingsButton();
