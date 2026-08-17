@@ -104,10 +104,23 @@ ported forward:
 
 ## 🔘 The button
 
-Added through `ScreenEvent.Init.Post` on `TitleScreen` and `PauseScreen`, not a mixin.
-Nothing here needs bytecode: the event hands over the finished widget list and a way to add
-to it. A mixin would also have to track every layout change and would collide with the
-several other mods that rearrange those two screens.
+Lectern does not add a button. NeoForge patches `TitleScreen` and `PauseScreen` to carry one
+already -- both reference `fml.menu.mods` and `ModListScreen` in the patched jar -- and a
+second button with the same label doing nearly the same thing is a worse menu than either
+alone. So `LecternButtons` finds that one, takes its exact bounds, and puts Lectern behind it.
+
+Through `ScreenEvent.Init.Post`, not a mixin. Nothing here needs bytecode: the event hands
+over the finished widget list plus `addListener`/`removeListener`, which is precisely the
+access required. A mixin would have to track every layout change and would collide with the
+other mods that rearrange those two screens.
+
+The button is matched on the **translation key** of its message, not the rendered text.
+Matching "Mods" as a string works in English and quietly stops working in every other
+language -- the sort of bug only ever reported by the people least able to describe it.
+
+If no such button is found, Lectern adds its own to the title screen and logs why. That means
+another mod removed it or the key changed; either way a mod list with no way to open it is
+worse, and the duplication this exists to avoid cannot happen when the original is missing.
 
 ## 📜 Licence
 

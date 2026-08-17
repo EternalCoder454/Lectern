@@ -26,7 +26,9 @@ in a server pack harmlessly.
 
 ## 🎮 Using it
 
-A **Mods** button appears at the top-left of the title screen and the pause menu.
+Lectern takes over the **Mods** button NeoForge already puts on the title screen and the
+pause menu -- same place, same label, it just opens Lectern instead of the loader's list.
+There is no second button to hunt for.
 
 | | |
 |---|---|
