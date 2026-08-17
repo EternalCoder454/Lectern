@@ -28,6 +28,7 @@ public final class LecternNeoForge {
         modBus.addListener(FMLClientSetupEvent.class, event -> event.enqueueWork(() -> {
             Lectern.index(new NeoForgeModSource());
             adoptLoaderScreens();
+            LecternButtons.register();
         }));
     }
 
