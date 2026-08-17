@@ -1,0 +1,13 @@
+{
+  "lectern.title": "Mods",
+  "lectern.search": "Search",
+  "lectern.count": "%s mods",
+  "lectern.count.filtered": "%s of %s mods",
+  "lectern.libraries.show": "Showing libraries",
+  "lectern.libraries.hide": "Hiding libraries",
+  "lectern.settings": "Settings",
+  "lectern.no_settings": "No settings",
+  "lectern.homepage": "Website",
+  "lectern.issues": "Report an issue",
+  "lectern.none": "Nothing matches that search."
+}

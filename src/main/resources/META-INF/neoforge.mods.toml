@@ -1,0 +1,47 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "MIT"
+
+[[mods]]
+modId = "lectern"
+version = "${mod_version}"
+displayName = "Lectern"
+authors = "EternalCoder454"
+description = '''
+A mod list that stays out of the way.
+
+Lectern shows what is installed, finds each mod's settings screen without asking the mod
+to do anything, and searches a few hundred of them without stuttering.
+'''
+
+[[dependencies.lectern]]
+modId = "neoforge"
+type = "required"
+versionRange = "[26.1,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.lectern]]
+modId = "minecraft"
+type = "required"
+versionRange = "[26.1.2,26.2)"
+ordering = "NONE"
+side = "CLIENT"
+
+# Both are mod lists. Running two means two buttons that do the same thing, which is a worse
+# menu than either alone rather than a broken one -- hence a warning, not a hard incompatibility.
+[[dependencies.lectern]]
+modId = "catalogue"
+type = "discouraged"
+reason = "Catalogue is also a mod list; you probably want one of the two."
+versionRange = "[0,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.lectern]]
+modId = "modmenu"
+type = "discouraged"
+reason = "Mod Menu is also a mod list; you probably want one of the two."
+versionRange = "[0,)"
+ordering = "NONE"
+side = "CLIENT"
